@@ -1,0 +1,15 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+flake8 = "*"
+azure-cognitiveservices-vision-face = "*"
+pillow = "*"
+opencv-python = "*"
+
+[requires]
+python_version = "3.6"
