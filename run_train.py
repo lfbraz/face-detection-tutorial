@@ -1,44 +1,38 @@
 from src.face import Face
+from os import listdir
+from os.path import isfile, join
+
+
+def __assign_person_image_to_person_group__(person_group_id, person_name, faces_image_path):
+    person_id = face.add_person_group_level(person_group_id, person_name)
+    print('{} added to the person_group {}'.format(person_name, person_group_id))
+
+    image_files = [f for f in listdir(faces_image_path) if isfile(join(faces_image_path, f))]
+
+    for path in image_files:
+        face.assign_person_image_to_person_group(person_group_id, person_id, path)
+
+
+def __train_model__(face, person_group_id):
+    # Train a person group
+    face.train_person_group(PERSON_GROUP_ID)
+
 
 # STEPS TO TRAIN THE COGNITIVE MODEL
+if __name__ == "__main__":
+    PERSON_GROUP_ID = 'pessoas'
 
-# Initiate the object
-face = Face()
+    # Initiate the object
+    face = Face()
 
-# Create a person group
-PERSON_GROUP_ID = 'pessoas'
-face.create_person_group(PERSON_GROUP_ID)
+    # Create a person group
+    PERSON_GROUP_ID = 'pessoas'
+    face.create_person_group(PERSON_GROUP_ID)
 
-# Create a level related to an existing person group
-# In our case will be used to identify the person
-PERSON_1 = 'obama'
+    # Assign persons to the person group
+    __assign_person_image_to_person_group__(PERSON_GROUP_ID, 'BARACK OBAMA', 'images/train/obama')
+    __assign_person_image_to_person_group__(PERSON_GROUP_ID, 'LEWIS HAMILTON', 'images/train/hamilton')
+    __assign_person_image_to_person_group__(PERSON_GROUP_ID, 'LUIZ BRAZ', 'images/train/luiz')
 
-person_id = face.add_person_group_level(PERSON_GROUP_ID, PERSON_1)
-print(person_id)
-
-# Assign a person image to a person group
-FACES_IMAGE_PATH = ['images/obama/obama_1.jpg',
-                    'images/obama/obama_2.jpg',
-                    'images/obama/obama_3.jpg']
-
-for path in FACES_IMAGE_PATH:
-    face.assign_person_image_to_person_group(PERSON_GROUP_ID, person_id, path)
-
-
-PERSON_2 = 'luiza'
-
-person_id = face.add_person_group_level(PERSON_GROUP_ID, PERSON_2)
-print(person_id)
-
-# Assign a person image to a person group
-FACES_IMAGE_PATH = ['images/luiza/IMG_20160213_110618494.jpg',
-                    'images/luiza/IMG_20160213_110651269.jpg',
-                    'images/luiza/IMG_20160213_110652816.jpg',
-                    'images/luiza/IMG_20160214_124123291.jpg'
-                    ]
-
-for path in FACES_IMAGE_PATH:
-    face.assign_person_image_to_person_group(PERSON_GROUP_ID, person_id, path)
-
-# Train a person group
-face.train_person_group(PERSON_GROUP_ID)
+    # Train the model
+    __train_model__(PERSON_GROUP_ID)
