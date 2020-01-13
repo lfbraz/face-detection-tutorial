@@ -26,7 +26,6 @@ if __name__ == "__main__":
     face = Face()
 
     # Create a person group
-    PERSON_GROUP_ID = 'pessoas'
     face.create_person_group(PERSON_GROUP_ID)
 
     # Assign persons to the person group
