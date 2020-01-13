@@ -7,8 +7,9 @@ face = Face()
 
 PERSON_GROUP_ID = 'pessoas'
 FACES_IMAGE_PATH_TO_BE_IDENTIFIED = ['images/obama/obama_4.jpg',
-                                     'images/luiza/IMG_20160213_110652816.jpg'
-]
+                                     'images/luiza/IMG_20160213_110652816.jpg',
+                                     'images/luiza/IMG_20160226_092750.jpg',
+                                     ]
 
 # Identify each the person
 for path in FACES_IMAGE_PATH_TO_BE_IDENTIFIED:

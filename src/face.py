@@ -101,9 +101,12 @@ class Face():
         '''
         Assign a person's image to a person group
         '''
-        self.face_client.person_group_person.add_face_from_stream(person_group_id,
-                                                                  person_id,
-                                                                  open(face_image_path, 'rb'))
+        try:
+            self.face_client.person_group_person.add_face_from_stream(person_group_id,
+                                                                      person_id,
+                                                                      open(face_image_path, 'rb'))
+        except Exception as e:
+            print('Error {} in the image file {}'.format(e, face_image_path))
 
     def train_person_group(self, person_group_id):
         '''
