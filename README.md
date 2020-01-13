@@ -3,7 +3,7 @@ This implementation is for learning purposes. The class face.py could be used to
 Could be used in scenarios like person identification, fraud detection, and much more.
 Use your creativity to expand the use ~~to have fun~~ to fix a lot of real world problems and feel free to clone this repo and adapt this code for your requirements :)
 
-## [Activate environment(https://pipenv.readthedocs.io/en/latest/)]
+## [Activate environment](https://pipenv.readthedocs.io/en/latest/)
 `pipenv shell`
 
 ## Flake8 config
@@ -38,7 +38,7 @@ with the person and put all of them inside the folder used in the path
 
 ## How to identify a person associated with an image
 Run `run_identify.py` and change `PERSON_GROUP_ID` and `FACES_IMAGE_PATH_TO_BE_IDENTIFIED`. It is important to use a PERSON_GROUP_ID
-that was already trained before (see **[How to train the model(https://github.com/lfbraz/face-detection-tutorial#how-to-train-the-model)]** section).
+that was already trained before (see **[How to train the model](https://github.com/lfbraz/face-detection-tutorial#how-to-train-the-model)** section).
 
 **PERSON_GROUP_ID**: is the name for the person group already used for the training stage
 **FACES_IMAGE_PATH_TO_BE_IDENTIFIED**: is the path of the images to be identified. You can also use the `is_url` flag
