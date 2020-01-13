@@ -1,6 +1,6 @@
 {
     "python.pythonPath": "/home/luiz-braz/.local/share/virtualenvs/face-detection-tutorial-02dO5PnB/bin/python",
     "python.linting.flake8Args": [
-        "--max-line-length=120",
+        "--max-line-length=140",
     ],
 }

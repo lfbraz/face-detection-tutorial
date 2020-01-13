@@ -1,11 +1,11 @@
 import config.settings as conf
 import os
+import sys
+import time
 from azure.cognitiveservices.vision.face import FaceClient
 from msrest.authentication import CognitiveServicesCredentials
-from PIL import Image
-import json
-import cv2
-import numpy
+from azure.cognitiveservices.vision.face.models import TrainingStatusType
+
 
 class Face():
     '''
@@ -37,7 +37,7 @@ class Face():
         return FaceClient(conf.ENDPOINT,
                           CognitiveServicesCredentials(conf.KEY))
 
-    def detect_faces_in_image(self, face_image_path, is_url=True):
+    def get_detected_face_in_image(self, face_image_path, is_url=True):
         '''
         Detects a face in a image (could be remote [URL] or local image).
 
@@ -66,13 +66,89 @@ class Face():
         if not detected_faces:
             raise Exception('No face detected from image {}'.format(single_image_name))
 
-        # Display the detected face ID in the first single-face image.
-        # Face IDs are used for comparison to faces (their IDs) detected in other images.
-        print('Detected face ID from', single_image_name, ':')
-
-        for face in detected_faces:
-            print(face.face_id)
-
         # Save this ID for use in Find Similar
-        first_image_face_ID = detected_faces[0].face_id
-        print(first_image_face_ID)
+        return detected_faces[0].face_id
+
+    def create_person_group(self, person_group_id):
+        '''
+        Create person group to a specific person
+
+        Returns
+            message: string
+            Indicate when the group was created or already existed
+        '''
+        try:
+            self.face_client.person_group.create(person_group_id=person_group_id,
+                                                 name=person_group_id)
+            print('Person group {} was created'.format(person_group_id))
+        except Exception as e:
+            print(e)
+
+    def add_person_group_level(self, person_group_id, name):
+        '''
+        Add a person group level to an existing person_group_id
+        Example: person_group_id = people, name=Woman
+        person_group_id = people, name=Man
+        person_group_id = people, name=Child
+
+        Returns
+            message: string
+            Indicate when the group was created or already existed
+        '''
+        return self.face_client.person_group_person.create(person_group_id, name).person_id
+
+    def assign_person_image_to_person_group(self, person_group_id, person_id, face_image_path):
+        '''
+        Assign a person's image to a person group
+        '''
+        self.face_client.person_group_person.add_face_from_stream(person_group_id,
+                                                                  person_id,
+                                                                  open(face_image_path, 'rb'))
+
+    def train_person_group(self, person_group_id):
+        '''
+        Train PersonGroup
+        '''
+
+        print()
+        print('Training the person group...')
+
+        # Train the person group
+        self.face_client.person_group.train(person_group_id)
+
+        while (True):
+            training_status = self.face_client.person_group.get_training_status(person_group_id)
+            print("Training status: {}.".format(training_status.status))
+            print()
+
+            if (training_status.status is TrainingStatusType.succeeded):
+                break
+            elif (training_status.status is TrainingStatusType.failed):
+                sys.exit('Training the person group has failed.')
+            time.sleep(5)
+
+    def identiy_face(self, person_group_id, face_image_path, is_url=True):
+        '''
+        Given a face_id and person_group_id try to identify the person associated with the face_id
+        '''
+        face_id = []
+        face_id.append(self.get_detected_face_in_image(face_image_path, is_url))
+
+        # Identify faces
+        results = self.face_client.face.identify(face_id, person_group_id)
+        print(results)
+
+        # print('Identifying faces in {}'.format(os.path.basename(image.name)))
+        if not results[0].candidates:
+            print('Person for face ID {} '
+                  'in the image file {} '
+                  'was not found'.format(face_id[0],face_image_path))
+        else:
+            print('Person for face ID {} '
+                  'in the image file {} '
+                  'is identified to the person "{}" '
+                  'with a confidence of {}.'.format(face_id[0],
+                                                    face_image_path,
+                                                    self.face_client.person_group_person.get(person_group_id,
+                                                                                             results[0].candidates[0].person_id).name,
+                                                    results[0].candidates[0].confidence))

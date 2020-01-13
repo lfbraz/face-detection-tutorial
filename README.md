@@ -4,7 +4,7 @@
 pipenv shell
 
 # Flake8 config
-flake8 --max-line-length=120
+flake8 --max-line-length=140
 
 # Set environment variables
 ## You can find API Key in Quick start section on Azure Portal
