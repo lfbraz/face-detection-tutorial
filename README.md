@@ -42,4 +42,9 @@ that was already trained before (see **[How to train the model](https://github.c
 
 **PERSON_GROUP_ID**: is the name for the person group already used for the training stage
 **FACES_IMAGE_PATH_TO_BE_IDENTIFIED**: is the path of the images to be identified. You can also use the `is_url` flag
-of the method `identiy_face` to be able to identify images directly from the web.
+of the method `identity_face` to be able to identify images directly from the web.
+
+## Clean up resources
+To clean up resources you can delete the Resource Group or the API using Azure Portal.
+If you don't want to lose the resources you can also run the file `run_cleanup.py`
+this method only delete the `person_group_id`.

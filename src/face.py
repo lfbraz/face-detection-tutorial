@@ -52,7 +52,7 @@ class Face():
                 True/False indicating when to use remote images (URL)
         '''
 
-        print('Detecting faces in the {} image'.format(face_image_path))
+        # print('Detecting faces in the {} image'.format(face_image_path))
 
         # Detect a face in an image that contains a single face
         single_image_name = os.path.basename(face_image_path)
@@ -64,7 +64,8 @@ class Face():
                                                                       return_face_id=True)
 
         if not detected_faces:
-            raise Exception('No face detected from image {}'.format(single_image_name))
+            print('No face detected from image {}'.format(single_image_name))
+            return None
 
         # Save this ID for use in Find Similar
         return detected_faces[0].face_id
@@ -130,22 +131,24 @@ class Face():
                 sys.exit('Training the person group has failed.')
             time.sleep(5)
 
-    def identiy_face(self, person_group_id, face_image_path, is_url=True):
+    def identify_face(self, person_group_id, face_image_path, is_url=True):
         '''
         Given a face_id and person_group_id try to identify the person associated with the face_id
         '''
         face_id = []
-        face_id.append(self.get_detected_face_in_image(face_image_path, is_url))
+        results = {}
 
-        # Identify faces
-        results = self.face_client.face.identify(face_id, person_group_id)
+        if(self.get_detected_face_in_image(face_image_path, is_url)):
+            face_id.append(self.get_detected_face_in_image(face_image_path, is_url))
+            # Identify faces
+            results = self.face_client.face.identify(face_id, person_group_id)
+
         print(results)
 
         # print('Identifying faces in {}'.format(os.path.basename(image.name)))
-        if not results[0].candidates:
-            print('Person for face ID {} '
-                  'in the image file {} '
-                  'was not found'.format(face_id[0],face_image_path))
+        if not results or not results[0].candidates:
+            print('Person in the image file {} '
+                  'was not found'.format(face_image_path))
         else:
             print('Person for face ID {} '
                   'in the image file {} '
@@ -155,3 +158,15 @@ class Face():
                                                     self.face_client.person_group_person.get(person_group_id,
                                                                                              results[0].candidates[0].person_id).name,
                                                     results[0].candidates[0].confidence))
+
+    def delete_person_group(self, person_group_id):
+        '''
+        Delete a person group
+        '''
+        try:
+            # Delete the main person group.
+            self.face_client.person_group.delete(person_group_id=person_group_id)
+            print("Deleted the person group ""{}"" from the source location.".format(person_group_id))
+            print()
+        except Exception as e:
+            print("Error {} when try to delete the person_group_id {}".format(e, person_group_id))

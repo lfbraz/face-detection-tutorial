@@ -10,7 +10,7 @@ def __assign_person_image_to_person_group__(person_group_id, person_name, faces_
     image_files = [f for f in listdir(faces_image_path) if isfile(join(faces_image_path, f))]
 
     for path in image_files:
-        face.assign_person_image_to_person_group(person_group_id, person_id, path)
+        face.assign_person_image_to_person_group(person_group_id, person_id, join(faces_image_path, path))
 
 
 def __train_model__(face, person_group_id):
@@ -31,7 +31,7 @@ if __name__ == "__main__":
     # Assign persons to the person group
     __assign_person_image_to_person_group__(PERSON_GROUP_ID, 'BARACK OBAMA', 'images/train/obama')
     __assign_person_image_to_person_group__(PERSON_GROUP_ID, 'LEWIS HAMILTON', 'images/train/hamilton')
-    __assign_person_image_to_person_group__(PERSON_GROUP_ID, 'LUIZ BRAZ', 'images/train/luiz')
+    __assign_person_image_to_person_group__(PERSON_GROUP_ID, 'QUEEN ELIZABETH', 'images/train/queen')
 
     # Train the model
-    __train_model__(PERSON_GROUP_ID)
+    __train_model__(face, PERSON_GROUP_ID)
