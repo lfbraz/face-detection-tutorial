@@ -31,7 +31,7 @@ the parameters `person_name` and `faces_image_path` for the method `__assign_per
 
 **PERSON_GROUP_ID**: is the name for the person group to be created (eg. People, Animals, etc)
 
-**person_name** is: the name of the person (Eg. Barack Obama)
+**person_name** : is the name of the person (Eg. Barack Obama)
 
 **faces_image_path**: is the path of the images to be used for training (Eg. obama_1.jpg, obama_2.jpg). You should download all the images associated
 with the person and put all of them inside the folder used in the path
